@@ -1,8 +1,20 @@
-import express from "express"
+import express from "express";
+import dotenv from "dotenv";
+import prisma from "./config/prisma.js";
 
-const app = express()
+dotenv.config();
 
+const app = express();
+app.use(express.json());
 
-app.listen(3000,()=>{
-    console.log(`Server is running at port 3000`)
-})
+app.get("/health", async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ status: "ok", database: "connected" });
+  } catch (error) {
+    res.status(500).json({ status: "error", database: "not connected" });
+  }
+});
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running at port ${process.env.PORT}`);
+});
