@@ -44,3 +44,51 @@ export const registerUsers = async (req, res) => {
     console.log(error);
   }
 };
+
+export const loginUsers = async(req,res)=>{
+  try {
+    const {email,password} = req.body
+
+     if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and password are required",
+      });
+    }
+
+    //find user by email
+    const user = await prisma.user.findUnique({
+      where:{
+        email
+      }
+    })
+
+    if(!user){
+      return res.status(401).json({message:"Invalid email or password"})
+    }
+
+    //compare the user entered password with the stored hashed password
+    const validPassword = await bcrypt.compare(
+      password,
+      user.password
+    )
+
+    if(!validPassword){
+      return res.status(401).json({message:"Invalid password"})
+    }
+
+    return res.status(200).json({
+      message:"Login completed successfully",
+      user:{
+        id:user.id,
+        email:user.email,
+        createdAt:user.createdAt
+      }
+    })
+
+
+
+  } catch (error) {
+    console.log(error)
+  }
+
+}
