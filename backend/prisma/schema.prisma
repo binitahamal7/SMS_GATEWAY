@@ -18,3 +18,12 @@ model User {
   updatedAt   DateTime  @updatedAt
 }
 
+model Route {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  priority    Int       @unique
+  balance     Int       @default(100)
+  failureRate Float 
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
