@@ -77,6 +77,7 @@ export const loginUsers = async (req, res) => {
     //generate JWT token
     const token = jwt.sign(
       {
+        id:user.id,
         email: user.email,
       },
       process.env.JWT_SECRET,
