@@ -16,6 +16,8 @@ model User {
   credits     Int       @default(100)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  messages    Message[]
 }
 
 model Route {
@@ -26,4 +28,22 @@ model Route {
   failureRate Float 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+}
+
+enum MessageStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+model Message {
+  id        Int           @id @default(autoincrement())
+  userId    Int
+  to        String
+  body      String
+  parts     Int
+  status    MessageStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
